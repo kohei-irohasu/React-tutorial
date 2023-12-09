@@ -1,4 +1,4 @@
-*{
+* {
   box-sizing: border-box;
 }
 
@@ -89,8 +89,24 @@ body {
   margin-left: 20px;
 }
 
+.toggle-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #2980b9;
+}
+
 .square-highlight {
-  background: #4e98ddad;
+  background-color: #fade5e;
   border: 1px solid #999;
   float: left;
   font-size: 24px;
@@ -103,4 +119,3 @@ body {
   text-align: center;
   width: 34px;
 }
-

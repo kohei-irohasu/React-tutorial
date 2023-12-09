@@ -1,31 +1,39 @@
 import { useState } from "react";
-import { Board } from "./Board";
+import Board from "./Board";
 
 const Game = () => {
 
-  const [history, setHistory] = useState([{ squares: Array(9).fill(""), position: null }]);
+  const [history, setHistory] = useState([
+    {
+      squares: Array(9).fill(''),
+      position: null
+    }
+  ]);
   const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
   const [movesOrder, setMovesOrder] = useState(false);
-  const {winner, winLine, isDraw} = calculateWinner(currentSquares.squares);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove].squares;
+  const { winner, winLine, isDraw } = calclateWinner(currentSquares);
 
-  const handlePlay = (nextSquares, colRow) => {
-    const nextHistory = [...history.slice(0, currentMove + 1), { squares: nextSquares, position: colRow }]
+  function handlePlay(nextSquares, position) {
+    const nextHistory = [
+      ...history.slice(0, currentMove + 1),
+      { squares: nextSquares, position: position },
+    ];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
-  }
+  }  
 
-  const jumpTo = (nextMove) => {
+  function jumpTo(nextMove) {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((step, move) => {
-    let description; 
+  const moves = history.map((squares, move) => {
+    let description;
     if (move > 0) {
-      description = `Go to move: ${step.position}`;
+      description = `Go to move # ${squares.position}`;
     } else {
-      description = "Go to game start";
+      description = 'Go to game start';
     }
     return (
       <li key={move}>
@@ -47,21 +55,23 @@ const Game = () => {
       <div className="game-board">
         <Board 
           xIsNext={xIsNext} 
-          squares={currentSquares.squares} 
+          squares={currentSquares} 
           onPlay={handlePlay}
-          winLine={winLine} 
+          winLine={winLine}
           isDraw={isDraw}
         />
       </div>
       <div className="game-info">
-        <button onClick={() => {setMovesOrder(!movesOrder)}}> A → Z ⇔ Z → A </button>
+        <button className="toggle-button" onClick={() => {setMovesOrder(!movesOrder)}}>
+          On/Off
+        </button>
         <ol>{moves}</ol>
       </div>
     </div>
   );
 }
 
-export const calculateWinner = (squares) => {
+export function calclateWinner(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -74,21 +84,23 @@ export const calculateWinner = (squares) => {
   ];
 
   const result = {
-    winner: null,
+    winner: '',
     winLine: [],
-    isDraw: false
+    isDraw: false,
   }
 
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       result.winner = squares[a];
-      result.winLine = result.winLine.concat(lines[i]);
+      result.winLine = [...lines[i]];
     }
   }
-  if (result.winner === null && !squares.includes(null)) {
+
+  if (result.winner === '' && !squares.includes('')) {
     result.isDraw = true;
   }
+
   return result;
 }
 
